@@ -12,27 +12,33 @@ export const drawStatic = (activeCircuit) => {
 };
 
 const animatePath = (activeCircuit, pos) => {
-    let ctx = activeCircuit.context;
+    let ctx = activeCircuit.context, linepos;
 
     ctx.beginPath();
     ctx.strokeStyle = activeCircuit.dynamicLines[0].color;
     ctx.lineWidth = activeCircuit.dynamicLines[0].lineWidth;
     ctx.lineCap = 'round';
 
+    
     for (const line of activeCircuit.dynamicLines) {
         const path = line.path;
 
-        if (path[pos] && path[pos + 1]) {
-            ctx.moveTo(path[pos].x, path[pos].y);
-            pos++;
-            ctx.lineTo(path[pos].x, path[pos].y);
+        linepos = pos;
+        if (path[linepos] && path[linepos + 1]) {
+            // Draw line
+            ctx.moveTo(path[linepos].x, path[linepos].y);
+            linepos++;
+            ctx.lineTo(path[linepos].x, path[linepos].y);
+        } else if (path[linepos]) {
+            // Draw circle
+            line.drawCircle(ctx);
         }
     }
 
     if (mouseState) {
         ctx.stroke();
         ctx.closePath();
-        setTimeout(() => animatePath(activeCircuit, pos), 4);
+        setTimeout(() => animatePath(activeCircuit, pos + 1), 4);
     } else {
         isRunning = 0;
     }

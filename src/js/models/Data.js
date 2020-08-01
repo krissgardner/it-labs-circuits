@@ -63,6 +63,22 @@ export const dynamicData = [
             {x: 10, y: 50}, 
             {x:20, y:40}
         ],
-        lineWidth: 5
+        lineWidth: 3
+    },
+    {
+        points: [
+            {x:0, y:60}, 
+            {x: 10, y: 60}, 
+            {x:20, y:50}
+        ],
+        lineWidth: 3
+    },
+    {
+        points: [
+            {x:0, y:70}, 
+            {x: 10, y: 70}, 
+            {x:20, y:60}
+        ],
+        lineWidth: 3
     }
 ];
