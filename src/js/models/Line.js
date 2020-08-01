@@ -70,4 +70,33 @@ export default class Line {
             context.closePath();
         }
     }
+
+    calcPath(speed = 1) {
+        const path = [];
+        const mapped = this.mappedPoints;
+
+        if (mapped.length > 1) {
+            for(let i = 1; i < mapped.length; i++) {
+                let xOffset, yOffset, dist, intervals;
+    
+                xOffset = mapped[i].x - mapped[i - 1].x;
+                yOffset = mapped[i].y - mapped[i - 1].y;
+                
+                // Number of points to generate in a line
+                // Next point is 5 px apart by default
+                dist = Math.sqrt(xOffset * xOffset + yOffset * yOffset);
+                intervals = Math.floor(dist / (5 * speed));
+    
+                for(let j = 0; j < intervals; j++) {
+                    path.push({
+                        x: mapped[i - 1].x + xOffset * j / intervals,
+                        y: mapped[i - 1].y + xOffset * j / intervals
+                    });
+                }
+            }
+
+            this.path = path;
+        }//if
+    }
+
 }

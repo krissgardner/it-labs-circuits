@@ -5,6 +5,7 @@
 import Ciruit from './models/Circuit';
 import Line from './models/Line';
 import * as data from './models/Data';
+import * as lineView from './views/lineView';
 
 let circuits = [];
 document.querySelectorAll('.circuits').forEach(el => {
@@ -30,6 +31,9 @@ window.addEventListener('resize', canvasResize);
  * CIRCUIT 0 CONTROLLER
  */
 
+// Circuit that will be used
+const circuit0 = circuits[0];
+
 /**
  * DATA SETUP
  */
@@ -42,29 +46,28 @@ let scale = {
     y: 100
 };
 
-// Circuit that will be used
-const circuit0 = circuits[0];
-
-let staticLines = [], dynamicLines = [];
+circuit0.scale = scale;
 
 const getData = (list) => {
     const lines = [];
     list.forEach(obj => {
-        let newLine = new Line(obj.points);
+        let newLine = new Line(obj.points, obj.color, obj.lineWidth);
         newLine.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
         lines.push(newLine);
     });
     return lines;
 };
 
+// Probably should be added to the class
+
 // Create static lines
-staticLines = getData(data.staticData);
+circuit0.staticLines = getData(data.staticData);
 
 // Create dynamic lines
-dynamicLines = getData(data.dynamicData);
+circuit0.dynamicLines = getData(data.dynamicData);
 
 // Get context of current canvas
-const context = circuit0.canvas.getContext('2d');
+circuit0.context = circuit0.canvas.getContext('2d');
 
 
 
@@ -72,39 +75,23 @@ const context = circuit0.canvas.getContext('2d');
  * PAINTING STATIC PART
  */
 
-const drawStatic = () => {
-    staticLines.forEach(line => {
-        line.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
-        line.drawLine(context);
-        line.drawCircle(context);
-    });
-};
+lineView.drawStatic(circuit0);
+window.addEventListener('resize', () => lineView.drawStatic(circuit0));
 
-drawStatic();
-window.addEventListener('resize', drawStatic);
 
 
 /**
  * PAINTING DYNAMIC PART
  */
-const drawDynamic = () => {
-    context.beginPath();
 
-    dynamicLines.forEach(line => {
-        line.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
-        line.drawLine(context);
-        line.drawCircle(context);
+const recalcPath = () => {
+    circuit0.dynamicLines.forEach(line => {
+        line.calcPath(1);
     });
-
-    context.closePath();
 };
 
-circuit0.circuit.addEventListener('mouseover', () => {
-    drawDynamic();
-});
+recalcPath();
+window.addEventListener('resize', recalcPath);
 
-circuit0.circuit.addEventListener('mouseout', () => {
-    context.clearRect(0, 0, circuit0.width, circuit0.height);
-    drawStatic();
-});
-
+// Startup the process
+lineView.drawDynamic(circuit0);
