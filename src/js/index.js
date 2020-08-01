@@ -53,21 +53,21 @@ let staticLines = [], dynamicLines = [];
         {x: 90, y: 50}, 
         {x:80, y:40}
     ],
-    [
-        {x:100, y:49}, 
-        {x: 90, y: 49}, 
-        {x:80, y:39}
-    ],
-    [
-        {x:100, y:48}, 
-        {x: 90, y: 48}, 
-        {x:80, y:38}
-    ],
-    [
-        {x:100, y:47}, 
-        {x: 90, y: 47}, 
-        {x:80, y:37}
-    ],
+    // [
+    //     {x:100, y:49}, 
+    //     {x: 90, y: 49}, 
+    //     {x:80, y:39}
+    // ],
+    // [
+    //     {x:100, y:48}, 
+    //     {x: 90, y: 48}, 
+    //     {x:80, y:38}
+    // ],
+    // [
+    //     {x:100, y:47}, 
+    //     {x: 90, y: 47}, 
+    //     {x:80, y:37}
+    // ],
 ].forEach(line => {
     let newLine = new Line(line);
     newLine.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
@@ -75,27 +75,28 @@ let staticLines = [], dynamicLines = [];
 });
 
 // Create dynamic lines
+
 [
     [
         {x:0, y:50}, 
         {x: 10, y: 50}, 
         {x:20, y:40}
     ],
-    [
-        {x:0, y:49}, 
-        {x: 10, y: 49}, 
-        {x:20, y:39}
-    ],
-    [
-        {x:0, y:48}, 
-        {x: 10, y: 48}, 
-        {x:20, y:38}
-    ],
-    [
-        {x:0, y:47}, 
-        {x: 10, y: 47}, 
-        {x:20, y:37}
-    ],
+    // [
+    //     {x:0, y:49}, 
+    //     {x: 10, y: 49}, 
+    //     {x:20, y:39}
+    // ],
+    // [
+    //     {x:0, y:48}, 
+    //     {x: 10, y: 48}, 
+    //     {x:20, y:38}
+    // ],
+    // [
+    //     {x:0, y:47}, 
+    //     {x: 10, y: 47}, 
+    //     {x:20, y:37}
+    // ],
 ].forEach(line => {
     let newLine = new Line(line);
     newLine.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
@@ -105,30 +106,23 @@ let staticLines = [], dynamicLines = [];
 // Get context of current canvas
 const context = circuit0.canvas.getContext('2d');
 
-const setStyle = () => {
-    context.strokeStyle = '#264f83';
-    context.lineWidth = 3;
-}
+
 
 /**
  * PAINTING STATIC PART
  */
 
- const drawStatic = () => {
-    context.beginPath();
-
-    setStyle();
-
+const drawStatic = () => {
     staticLines.forEach(line => {
         line.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
         line.drawLine(context);
+        line.drawCircle(context);
     });
-
-    context.closePath();
 };
 
 drawStatic();
 window.addEventListener('resize', drawStatic);
+
 
 /**
  * PAINTING DYNAMIC PART
@@ -136,11 +130,10 @@ window.addEventListener('resize', drawStatic);
 const drawDynamic = () => {
     context.beginPath();
 
-    setStyle();
-
     dynamicLines.forEach(line => {
         line.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
         line.drawLine(context);
+        line.drawCircle(context);
     });
 
     context.closePath();
