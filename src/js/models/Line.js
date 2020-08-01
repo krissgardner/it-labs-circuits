@@ -26,6 +26,7 @@ export default class Line {
             context.beginPath();
             context.strokeStyle = this.color;
             context.lineWidth = this.lineWidth;
+            context.lineCap = 'round';
 
             context.moveTo(pts[0].x, pts[0].y);
             for(let i = 1; i < pts.length; i++) {
@@ -71,7 +72,7 @@ export default class Line {
         }
     }
 
-    calcPath(speed = 1) {
+    calcPath() {
         const path = [];
         const mapped = this.mappedPoints;
 
@@ -83,19 +84,19 @@ export default class Line {
                 yOffset = mapped[i].y - mapped[i - 1].y;
                 
                 // Number of points to generate in a line
-                // Next point is 5 px apart by default
+                // Next point is 3 px apart by default
                 dist = Math.sqrt(xOffset * xOffset + yOffset * yOffset);
-                intervals = Math.floor(dist / (5 * speed));
-    
+                intervals = Math.floor(dist / 3);
+
                 for(let j = 0; j < intervals; j++) {
                     path.push({
                         x: mapped[i - 1].x + xOffset * j / intervals,
-                        y: mapped[i - 1].y + xOffset * j / intervals
+                        y: mapped[i - 1].y + yOffset * j / intervals
                     });
                 }
-            }
 
             this.path = path;
+            }
         }//if
     }
 

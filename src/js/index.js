@@ -86,12 +86,14 @@ window.addEventListener('resize', () => lineView.drawStatic(circuit0));
 
 const recalcPath = () => {
     circuit0.dynamicLines.forEach(line => {
-        line.calcPath(1);
+        line.calcPath();
     });
 };
 
 recalcPath();
 window.addEventListener('resize', recalcPath);
+
+console.log(circuit0);
 
 // Startup the process
 lineView.drawDynamic(circuit0);
