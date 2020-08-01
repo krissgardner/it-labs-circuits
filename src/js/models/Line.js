@@ -19,7 +19,7 @@ export default class Line {
         return mappedPoints;
     }
 
-    drawLine(context) {
+    drawLine(context, restrict = 9999) {
         const pts = this.mappedPoints;
 
         if (pts.length > 1) {
@@ -29,7 +29,7 @@ export default class Line {
             context.lineCap = 'round';
 
             context.moveTo(pts[0].x, pts[0].y);
-            for(let i = 1; i < pts.length; i++) {
+            for(let i = 1; i < pts.length && i < restrict; i++) {
                 context.lineTo(pts[i].x, pts[i].y);
             }
 

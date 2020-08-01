@@ -1,7 +1,10 @@
 import Line from '../models/Line';
 
-// mouseover => 1; mouseout => 0
-let mouseState = 0, isRunning = 0;
+const delay = 4;
+
+// could be async
+let mouseState = 0, isRunning = 0, progress = 0;
+
 
 export const drawStatic = (activeCircuit) => {
     activeCircuit.staticLines.forEach(line => {
@@ -11,19 +14,22 @@ export const drawStatic = (activeCircuit) => {
     });
 };
 
-const animatePath = (activeCircuit, pos) => {
+
+
+const paintProgress = (activeCircuit, max) => {
     let ctx = activeCircuit.context, linepos;
 
     ctx.beginPath();
-    ctx.strokeStyle = activeCircuit.dynamicLines[0].color;
-    ctx.lineWidth = activeCircuit.dynamicLines[0].lineWidth;
-    ctx.lineCap = 'round';
+    ctx.lineCap = 'round'; // Maybe add to struct
 
     
     for (const line of activeCircuit.dynamicLines) {
         const path = line.path;
 
-        linepos = pos;
+        ctx.strokeStyle = line.color;
+        ctx.lineWidth = line.lineWidth;
+
+        linepos = progress;
         if (path[linepos] && path[linepos + 1]) {
             // Draw line
             ctx.moveTo(path[linepos].x, path[linepos].y);
@@ -35,23 +41,79 @@ const animatePath = (activeCircuit, pos) => {
         }
     }
 
+    // Update progress
+    progress++;
+    console.log('paint ' + progress);
+
     if (mouseState) {
         ctx.stroke();
-        ctx.closePath();
-        setTimeout(() => animatePath(activeCircuit, pos + 1), 4);
+    }
+
+    ctx.closePath();
+
+    if (mouseState && progress < max) {
+        setTimeout(() => paintProgress(activeCircuit, max), delay);
     } else {
         isRunning = 0;
     }
 }
 
+
+
+const reverseProgress = (activeCircuit) => {
+    if (progress != 0 && !mouseState) {
+
+        // Reset canvas and prep for dyn
+        activeCircuit.context.clearRect(0, 0, activeCircuit.width, activeCircuit.height);
+        drawStatic(activeCircuit);
+
+        // Draw and shorten progress
+        // for (const line of activeCircuit.dynamicLines) {
+        //     // const context = activeCircuit.context;
+        //     // context.beginPath();
+        //     // context.strokeStyle = line.color;
+        //     // context.lineWidth = line.lineWidth;
+        //     // context.lineCap = 'round';
+
+        //     // context.moveTo(pts[0].x, pts[0].y);
+        //     // for(let i = 1; i < progress && i < line.path.length; i++){
+        //     //     context.lineTo(pts[i].x, pts[i].y);
+        //     // }
+            
+        //     // context.stroke();
+        //     // context.closePath();
+        //     line.drawLine(activeCircuit.context, progress);
+        //     if (line.path[progress - 1] && !line.path[progress]) {
+        //         line.drawCircle(activeCircuit.context);
+        //     }
+        // }
+
+        // Update progress
+        progress--;
+        console.log('reverse ' + progress);
+
+        setTimeout(() => reverseProgress(activeCircuit), delay);
+    }
+};
+
+
+
+const calcMaxPoints = (activeCircuit) => {
+    let max = activeCircuit.dynamicLines.reduce((acc, cur) => {
+        return Math.max(acc, cur.path.length);
+    }, 0);
+    return max;
+};
+
 export const drawDynamic = (activeCircuit) => {
+
+    let maxPoints = calcMaxPoints(activeCircuit);
 
     activeCircuit.circuit.addEventListener('mouseover', () => {
         mouseState = 1;
-        let pos = 0;
-        if(!isRunning) {
+        if(!isRunning && progress < maxPoints) {
             isRunning = 1;
-            animatePath(activeCircuit, pos);
+            paintProgress(activeCircuit, maxPoints);
         }
     });
 
@@ -60,8 +122,7 @@ export const drawDynamic = (activeCircuit) => {
         let circuit = e.relatedTarget.closest('.circuits');
         if(!circuit) {
             mouseState = 0;
-            activeCircuit.context.clearRect(0, 0, activeCircuit.width, activeCircuit.height);
-            drawStatic(activeCircuit);
+            reverseProgress(activeCircuit);
         }
     }
 
