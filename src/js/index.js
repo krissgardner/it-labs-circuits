@@ -4,6 +4,7 @@
 
 import Ciruit from './models/Circuit';
 import Line from './models/Line';
+import * as data from './models/Data';
 
 let circuits = [];
 document.querySelectorAll('.circuits').forEach(el => {
@@ -46,62 +47,21 @@ const circuit0 = circuits[0];
 
 let staticLines = [], dynamicLines = [];
 
+const getData = (list) => {
+    const lines = [];
+    list.forEach(obj => {
+        let newLine = new Line(obj.points);
+        newLine.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
+        lines.push(newLine);
+    });
+    return lines;
+};
+
 // Create static lines
-[
-    [
-        {x:100, y:50}, 
-        {x: 90, y: 50}, 
-        {x:80, y:40}
-    ],
-    // [
-    //     {x:100, y:49}, 
-    //     {x: 90, y: 49}, 
-    //     {x:80, y:39}
-    // ],
-    // [
-    //     {x:100, y:48}, 
-    //     {x: 90, y: 48}, 
-    //     {x:80, y:38}
-    // ],
-    // [
-    //     {x:100, y:47}, 
-    //     {x: 90, y: 47}, 
-    //     {x:80, y:37}
-    // ],
-].forEach(line => {
-    let newLine = new Line(line);
-    newLine.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
-    staticLines.push(newLine);
-});
+staticLines = getData(data.staticData);
 
 // Create dynamic lines
-
-[
-    [
-        {x:0, y:50}, 
-        {x: 10, y: 50}, 
-        {x:20, y:40}
-    ],
-    // [
-    //     {x:0, y:49}, 
-    //     {x: 10, y: 49}, 
-    //     {x:20, y:39}
-    // ],
-    // [
-    //     {x:0, y:48}, 
-    //     {x: 10, y: 48}, 
-    //     {x:20, y:38}
-    // ],
-    // [
-    //     {x:0, y:47}, 
-    //     {x: 10, y: 47}, 
-    //     {x:20, y:37}
-    // ],
-].forEach(line => {
-    let newLine = new Line(line);
-    newLine.getMappedPoints(circuit0.width, circuit0.height, scale.x, scale.y);
-    dynamicLines.push(newLine);
-});
+dynamicLines = getData(data.dynamicData);
 
 // Get context of current canvas
 const context = circuit0.canvas.getContext('2d');
