@@ -19,8 +19,8 @@ export default class Line {
         return mappedPoints;
     }
 
-    drawLine(context, restrict = 9999) {
-        const pts = this.mappedPoints;
+    drawLine(context, src = 'mappedPoints', restrict = 9999) {
+        const pts = this[src];
 
         if (pts.length > 1) {
             context.beginPath();
@@ -38,8 +38,8 @@ export default class Line {
         }
     }
 
-    drawCircle(context) {
-        const pts = this.mappedPoints;
+    drawCircle(context, src = 'mappedPoints') {
+        const pts = this[src];
 
         if (pts.length > 1) {
             const between = (x, min, max) => x >= min && x <= max;
