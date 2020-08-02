@@ -21,9 +21,7 @@ const canvasResize = () => {
     });
 }
 
-
 canvasResize();
-window.addEventListener('resize', canvasResize);
 
 
 
@@ -71,29 +69,34 @@ circuit0.context = circuit0.canvas.getContext('2d');
 
 
 
+const resize = (circuit) => {
+    canvasResize();
+    lineView.drawStatic(circuit);
+
+    circuit.dynamicLines.forEach(line => {
+        line.getMappedPoints(circuit.width, circuit.height, circuit.scale.x, circuit.scale.y);
+        line.calcPath();
+    });
+}
+
+resize(circuit0);
+
+window.addEventListener('resize', () => resize(circuit0));
+
+
+
 /**
  * PAINTING STATIC PART
  */
 
 lineView.drawStatic(circuit0);
-window.addEventListener('resize', () => lineView.drawStatic(circuit0));
-
 
 
 /**
  * PAINTING DYNAMIC PART
  */
 
-const recalcPath = () => {
-    circuit0.dynamicLines.forEach(line => {
-        line.calcPath();
-    });
-};
-
-recalcPath();
-window.addEventListener('resize', recalcPath);
-
-console.log(circuit0);
-
-// Startup the process
 lineView.drawDynamic(circuit0);
+
+
+

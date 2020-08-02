@@ -95,7 +95,7 @@ export default class Line {
                     });
                 }
 
-            this.path = path;
+                this.path = path;
             }
         }//if
     }

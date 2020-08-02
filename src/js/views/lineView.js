@@ -1,5 +1,3 @@
-import Line from '../models/Line';
-
 const delay = 4;
 
 // could be async, maybe a promise
@@ -21,7 +19,6 @@ const drawProgress = (activeCircuit, max) => {
 
     // Update progress
     progress += mouseState ? 1 : -1;
-    console.log(progress);
 
     // Reset canvas and prep for dyn
     activeCircuit.context.clearRect(0, 0, activeCircuit.width, activeCircuit.height);
@@ -35,14 +32,14 @@ const drawProgress = (activeCircuit, max) => {
         context.lineCap = 'round';
 
         line.drawLine(context, 'path', progress);
-        if (progress == line.path.length - 1) {
-            line.drawCircle(context, 'path');
+        if (progress >= line.path.length) {
+            line.drawCircle(context);
         }
+        context.closePath();
     }
 
     // Update progress
     progress += mouseState ? 1 : -1;
-    console.log(progress);
 };
 
 
