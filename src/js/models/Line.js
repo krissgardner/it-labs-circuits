@@ -48,26 +48,18 @@ export default class Line {
             context.strokeStyle = this.color;
             context.lineWidth = this.lineWidth;
 
-            let x1, x2, x3, y1, y2, y3, alpha;
+            const x = pts[pts.length - 1].x,
+                  y = pts[pts.length - 1].y;
+
             const rad = this.lineWidth * 2;
 
-            [x2, y2] = [pts[pts.length - 1].x, pts[pts.length - 1].y];
-            [x1, y1] = [pts[pts.length - 2].x, pts[pts.length - 2].y];
+            context.arc(x, y, rad, 0, 2 * Math.PI);
 
-            alpha = Math.atan((y2 - y1) / (x2 - x1));
-
-            x3 = x2 + rad * Math.cos(alpha);
-            if(between(x3, x1, x2) || between(x3, x2, x1)) {
-                x3 = x2 - rad * Math.cos(alpha);
-            }
-            y3 = y2 + rad * Math.sin(alpha);
-            if(between(y3, y1, y2) || between(y3, y2, y1)) {
-                y3 = y2 - rad * Math.sin(alpha);
-            }
-
-            context.arc(x3, y3, rad, 0, 2 * Math.PI);
+            context.fillStyle = '#fff';
+            context.fill();
 
             context.stroke();
+
             context.closePath();
         }
     }
