@@ -305,7 +305,7 @@ export const dynamicData = [
         points: [
             {x: 35,  y: 0},
             {x: 28,  y: 15},
-            {x: 26.5,  y: 33},
+            {x: 26.5,  y: 33}
         ],
         color: colorSecondary
     },
