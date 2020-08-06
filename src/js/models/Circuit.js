@@ -22,4 +22,11 @@ export default class circuit {
     getCanvas() {
         this.canvas = this.circuit.querySelector('.circuits__canvas');
     }
+
+    calcMaxPathLength() {
+        let max = this.dynamicLines.reduce((acc, cur) => {
+            return Math.max(acc, cur.path.length);
+        }, 0);
+        return max;
+    };
 }

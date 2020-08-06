@@ -1,4 +1,6 @@
-const delay = 4;
+import circuit from "../models/Circuit";
+
+const delay = 8;
 
 // could be async, maybe a promise
 let mouseState = 0, isRunning = 0, progress = 0;
@@ -14,7 +16,7 @@ export const drawStatic = (activeCircuit) => {
 
 
 
-const drawProgress = (activeCircuit, max) => {
+const drawProgress = (activeCircuit) => {
     const context = activeCircuit.context;
 
     // Update progress
@@ -32,7 +34,7 @@ const drawProgress = (activeCircuit, max) => {
         context.lineCap = 'round';
 
         line.drawLine(context, 'path', progress);
-        if (progress >= line.path.length) {
+        if (progress >= line.path.length - 1) {
             line.drawCircle(context);
         }
         context.closePath();
@@ -46,7 +48,7 @@ const drawProgress = (activeCircuit, max) => {
 
 const paintProgress = (activeCircuit, max) => {
     
-    drawProgress(activeCircuit, max);
+    drawProgress(activeCircuit);
 
     if (mouseState && progress < max) {
         setTimeout(() => paintProgress(activeCircuit, max), delay);
@@ -64,7 +66,7 @@ const reverseProgress = (activeCircuit, max) => {
         activeCircuit.context.clearRect(0, 0, activeCircuit.width, activeCircuit.height);
         drawStatic(activeCircuit);
 
-        drawProgress(activeCircuit, max)
+        drawProgress(activeCircuit)
 
         setTimeout(() => reverseProgress(activeCircuit), delay);
     }
@@ -72,18 +74,12 @@ const reverseProgress = (activeCircuit, max) => {
 
 
 
-const calcMaxPoints = (activeCircuit) => {
-    let max = activeCircuit.dynamicLines.reduce((acc, cur) => {
-        return Math.max(acc, cur.path.length);
-    }, 0);
-    return max;
-};
-
 export const drawDynamic = (activeCircuit) => {
 
-    let maxPoints = calcMaxPoints(activeCircuit);
+    
 
     activeCircuit.circuit.addEventListener('mouseover', () => {
+        let maxPoints = activeCircuit.pathLen;
         mouseState = 1;
         if(!isRunning && progress < maxPoints) {
             isRunning = 1;
@@ -93,6 +89,7 @@ export const drawDynamic = (activeCircuit) => {
 
     // Custom mouseout to prevent events when moving mouse over children
     const onMouseOut = (e) => {
+        let maxPoints = activeCircuit.pathLen;
         let circuit = e.relatedTarget.closest('.circuits');
         if(!circuit) {
             mouseState = 0;

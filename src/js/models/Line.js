@@ -40,28 +40,19 @@ export default class Line {
 
     drawCircle(context, src = 'mappedPoints') {
         const pts = this[src];
+        context.beginPath();
+        context.strokeStyle = this.color;
+        context.lineWidth = this.lineWidth;
 
-        if (pts.length > 1) {
-            const between = (x, min, max) => x >= min && x <= max;
+        const x = pts[pts.length - 1].x,
+            y = pts[pts.length - 1].y;
+        const rad = this.lineWidth * 2;
 
-            context.beginPath();
-            context.strokeStyle = this.color;
-            context.lineWidth = this.lineWidth;
-
-            const x = pts[pts.length - 1].x,
-                  y = pts[pts.length - 1].y;
-
-            const rad = this.lineWidth * 2;
-
-            context.arc(x, y, rad, 0, 2 * Math.PI);
-
-            context.fillStyle = '#fff';
-            context.fill();
-
-            context.stroke();
-
-            context.closePath();
-        }
+        context.arc(x, y, rad, 0, 2 * Math.PI);
+        context.fillStyle = '#fff';
+        context.fill();
+        context.stroke();
+        context.closePath();
     }
 
     calcPath() {
@@ -78,7 +69,7 @@ export default class Line {
                 // Number of points to generate in a line
                 // Next point is 3 px apart by default
                 dist = Math.sqrt(xOffset * xOffset + yOffset * yOffset);
-                intervals = Math.floor(dist / 3);
+                intervals = Math.floor(dist / 5);
 
                 for(let j = 0; j < intervals; j++) {
                     path.push({
@@ -91,5 +82,4 @@ export default class Line {
             }
         }//if
     }
-
 }

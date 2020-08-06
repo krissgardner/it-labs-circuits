@@ -6,6 +6,7 @@ import Ciruit from './models/Circuit';
 import Line from './models/Line';
 import * as data from './models/Data';
 import * as lineView from './views/lineView';
+import circuit from './models/Circuit';
 
 let circuits = [];
 document.querySelectorAll('.circuits').forEach(el => {
@@ -77,6 +78,7 @@ const resize = (circuit) => {
         line.getMappedPoints(circuit.width, circuit.height, circuit.scale.x, circuit.scale.y);
         line.calcPath();
     });
+    circuit.pathLen = circuit.calcMaxPathLength();
 }
 
 resize(circuit0);
@@ -90,7 +92,6 @@ window.addEventListener('resize', () => resize(circuit0));
  */
 
 lineView.drawStatic(circuit0);
-
 
 /**
  * PAINTING DYNAMIC PART
