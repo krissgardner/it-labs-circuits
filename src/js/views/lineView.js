@@ -74,17 +74,6 @@ const reverseProgress = (activeCircuit, max) => {
 
 
 
-<<<<<<< HEAD
-=======
-const calcMaxPoints = (activeCircuit) => {
-    console.log(activeCircuit);
-    let max = activeCircuit.dynamicLines.reduce((acc, cur) => {
-        return Math.max(acc, cur.path.length);
-    }, 0);
-    return max;
-};
-
->>>>>>> master
 export const drawDynamic = (activeCircuit) => {
 
     
