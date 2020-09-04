@@ -1,5 +1,5 @@
-import circuit from "../models/Circuit";
 
+// ms to wait until next paint
 const delay = 8;
 
 // could be async, maybe a promise
@@ -10,10 +10,9 @@ export const drawStatic = (activeCircuit) => {
     activeCircuit.staticLines.forEach(line => {
         line.getMappedPoints(activeCircuit.width, activeCircuit.height, activeCircuit.scale.x, activeCircuit.scale.y);
         line.drawLine(activeCircuit.context);
-        line.drawCircle(activeCircuit.context);
+        line.drawCircle(activeCircuit.context,undefined,activeCircuit.bgColor);
     });
 };
-
 
 
 const drawProgress = (activeCircuit) => {
@@ -35,7 +34,7 @@ const drawProgress = (activeCircuit) => {
 
         line.drawLine(context, 'path', progress);
         if (progress >= line.path.length - 1) {
-            line.drawCircle(context);
+            line.drawCircle(context,undefined,activeCircuit.bgColor);
         }
         context.closePath();
     }
@@ -75,8 +74,6 @@ const reverseProgress = (activeCircuit, max) => {
 
 
 export const drawDynamic = (activeCircuit) => {
-
-    
 
     activeCircuit.circuit.addEventListener('mouseover', () => {
         let maxPoints = activeCircuit.pathLen;

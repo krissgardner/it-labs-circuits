@@ -59,7 +59,7 @@ export default class Line {
             context.moveTo(pts[0].x, pts[0].y);
             
             // if it has a circle, then leave out the last point
-            const offset = this.hasCircle ? 1 : 0;
+            // const offset = this.hasCircle ? 1 : 0;
             for(let i = 1; i < pts.length && i < restrict; i++) {
                 context.lineTo(pts[i].x, pts[i].y);
             }
@@ -69,7 +69,7 @@ export default class Line {
         }
     }
 
-    drawCircle(context, src = 'mappedPoints') {
+    drawCircle(context, src = 'mappedPoints', backgroundColor = '#fff') {
         const pts = this[src];
         context.beginPath();
         context.strokeStyle = this.color;
@@ -80,7 +80,7 @@ export default class Line {
         const rad = this.lineWidth * 2;
 
         context.arc(x, y, rad, 0, 2 * Math.PI);
-        context.fillStyle = '#fff';
+        context.fillStyle = backgroundColor;
         context.fill();
         context.stroke();
         context.closePath();
@@ -89,8 +89,6 @@ export default class Line {
     calcPath() {
         const path = [];
         const mapped = this.mappedPoints;
-
-        console.log(mapped);
 
         if (mapped.length > 1) {
             const offset = this.hasCircle ? 1 : 0;
@@ -101,7 +99,7 @@ export default class Line {
                 yOffset = mapped[i].y - mapped[i - 1].y;
                 
                 // Number of points to generate in a line
-                // Next point is 3 px apart by default
+                // Next point is 5 px apart by default
                 dist = Math.sqrt(xOffset * xOffset + yOffset * yOffset);
                 intervals = Math.floor(dist / 5);
 

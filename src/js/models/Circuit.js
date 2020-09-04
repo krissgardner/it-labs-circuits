@@ -1,14 +1,17 @@
+import {domStrings} from '../models/base';
+
 export default class circuit {
 
-    constructor (id) {
+    constructor (id, bgColor) {
         this.circuit = document.getElementById(id);
+        this.bgColor = bgColor;
     }
     
     getCanvasSize() {
-        const width = window.innerWidth;
-        const gridSize = this.circuit.querySelector('.circuits__container').clientHeight;
+        const width = this.circuit.clientWidth;
+        const sectionHeight = this.circuit.clientHeight;
         // Expecting less content than there should be
-        const height = Math.max(500, gridSize);
+        const height = Math.max(500, sectionHeight);
         
         this.width = width;
         this.height = height;
@@ -20,7 +23,7 @@ export default class circuit {
     }
 
     getCanvas() {
-        this.canvas = this.circuit.querySelector('.circuits__canvas');
+        this.canvas = this.circuit.querySelector(domStrings.circuitCanvas);
     }
 
     calcMaxPathLength() {

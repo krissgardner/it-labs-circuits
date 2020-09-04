@@ -12,3 +12,13 @@ body {
     box-sizing: border-box;
     font-size: 1.6rem;
 }
+
+.custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & img {
+        max-width: 50rem;
+    }
+}
