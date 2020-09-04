@@ -45,22 +45,34 @@ export const updateBackground = (currentCircuit) => {
     bgElem.style.backgroundColor = currentCircuit.bgColor;
 }
 
-export const create = (id, data, scale = {x: 100, y: 100}, backgroundColor = '#fff') => {
+export const create = (params) => {
+    let currentCircuit;
+    try {
+        // Setup
+        if(params.id) {
+            currentCircuit = new Ciruit(params.id, params.backgroundColor ? params.backgroundColor : '#fff');
+        } else throw 'Missing or invalid ID';
+        
+        // Get canvas child
+        currentCircuit.getCanvas();
 
-    // Setup
-    let currentCircuit = new Ciruit(id, backgroundColor);
+        // Check for custom scale
+        currentCircuit.scale = params.scale ? params.scale : {x: 100, y: 100};
+        
+        updateBackground(currentCircuit);
 
-    currentCircuit.getCanvas();
+        if(params.data) {
+            // Create static lines
+            currentCircuit.staticLines = getData(params.data.staticData, currentCircuit);
 
-    currentCircuit.scale = scale;
-
-    updateBackground(currentCircuit);
-
-    // Create static lines
-    currentCircuit.staticLines = getData(data.staticData, currentCircuit);
-
-    // Create dynamic lines
-    currentCircuit.dynamicLines = getData(data.dynamicData, currentCircuit);
+            // Create dynamic lines
+            currentCircuit.dynamicLines = getData(params.data.dynamicData, currentCircuit);
+        } else throw 'Missing points data';
+    
+    } catch(error) {
+        console.log(error);
+    }
+    
 
     // Get context of current canvas
     currentCircuit.context = currentCircuit.canvas.getContext('2d');
